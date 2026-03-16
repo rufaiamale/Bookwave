@@ -101,23 +101,6 @@ export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string
     }
 };
 
-        return {
-            success: true,
-            data: {
-                content: segments,
-                totalPages: pdfDocument.numPages,
-                totalSegments: segments.length
-            }
-        };
-    } catch (error) {
-        console.error('Error processing PDF on server:', error);
-        return {
-            success: false,
-            error: `Failed to process PDF: ${error instanceof Error ? error.message : String(error)}`
-        };
-    }
-};
-
 export const getAllBooks = async (search?: string) => {
     try {
         await connectToDatabase();

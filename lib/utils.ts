@@ -93,14 +93,17 @@ export const formatDuration = (seconds: number): string => {
 
 export async function generateCoverImage(file: File): Promise<string> {
   try {
+    // Only import pdfjs-dist on the client side
+    if (typeof window === 'undefined') {
+      throw new Error('Cover image generation is only available on client side');
+    }
+
     const pdfjsLib = await import('pdfjs-dist');
 
-    if (typeof window !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-          'pdfjs-dist/build/pdf.worker.min.mjs',
-          import.meta.url,
-      ).toString();
-    }
+    pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.mjs',
+        import.meta.url,
+    ).toString();
 
     // Read file as array buffer
     const arrayBuffer = await file.arrayBuffer();
@@ -142,14 +145,17 @@ export async function generateCoverImage(file: File): Promise<string> {
 
 export async function parsePDFFile(file: File) {
   try {
+    // Only import pdfjs-dist on the client side
+    if (typeof window === 'undefined') {
+      throw new Error('PDF parsing is only available on client side');
+    }
+
     const pdfjsLib = await import('pdfjs-dist');
 
-    if (typeof window !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-          'pdfjs-dist/build/pdf.worker.min.mjs',
-          import.meta.url,
-      ).toString();
-    }
+    pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.mjs',
+        import.meta.url,
+    ).toString();
 
     // Read file as array buffer
     const arrayBuffer = await file.arrayBuffer();
