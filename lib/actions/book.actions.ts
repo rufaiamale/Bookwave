@@ -12,41 +12,41 @@ export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string
     try {
         console.log('Processing PDF on server...');
 
-        const pdfjsLib = await import('pdfjs-dist');
+        const pdfParse = (await import('pdf-parse')).default;
 
-        // Set worker source for server-side
-        pdfjsLib.GlobalWorkerOptions.workerSrc = './node_modules/pdfjs-dist/build/pdf.worker.min.mjs';
+        // Convert ArrayBuffer to Buffer for pdf-parse
+        const buffer = Buffer.from(fileBuffer);
 
-        // Load PDF document
-        const loadingTask = pdfjsLib.getDocument({ data: fileBuffer });
-        const pdfDocument = await loadingTask.promise;
+        const data = await pdfParse(buffer);
 
-        console.log(`PDF loaded with ${pdfDocument.numPages} pages`);
+        console.log(`PDF loaded with ${data.numpages} pages`);
 
-        // Extract text from all pages
-        let fullText = '';
+        // Get the full text content
+        const fullText = data.text;
 
-        for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
-            const page = await pdfDocument.getPage(pageNum);
-            const textContent = await page.getTextContent();
-            const pageText = textContent.items
-                .filter((item) => 'str' in item)
-                .map((item) => (item as { str: string }).str)
-                .join(' ');
-            fullText += pageText + '\n';
-
-            if (pageNum % 10 === 0) {
-                console.log(`Processed ${pageNum}/${pdfDocument.numPages} pages`);
-            }
-        }
+        console.log(`Extracted ${fullText.length} characters of text`);
 
         // Split text into segments for search
         const segments = splitIntoSegments(fullText);
 
         console.log(`PDF processing complete: ${segments.length} segments created`);
 
-        // Clean up PDF document resources
-        await pdfDocument.destroy();
+        return {
+            success: true,
+            data: {
+                content: segments,
+                totalPages: data.numpages,
+                totalSegments: segments.length
+            }
+        };
+    } catch (error) {
+        console.error('Error processing PDF on server:', error);
+        return {
+            success: false,
+            error: `Failed to process PDF: ${error instanceof Error ? error.message : String(error)}`
+        };
+    }
+};
 
         return {
             success: true,

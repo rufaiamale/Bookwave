@@ -55,6 +55,7 @@ export const splitIntoSegments = (
     segments.push({
       text: segmentText,
       segmentIndex,
+      pageNumber: 1, // Default page number since pdf-parse doesn't provide page-by-page text
       wordCount: segmentWords.length,
     });
 
