@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import "./clerk.css";
 import {Toaster} from "@/components/ui/sonner";
 
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -20,7 +21,7 @@ const monaSans = Mona_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Bookified",
+  title: "Bookwave",
   description: "Transform your books into interactive AI conversations. Upload PDFs, and chat with your books using voice.",
 };
 
