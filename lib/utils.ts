@@ -101,7 +101,7 @@ export async function generateCoverImage(file: File): Promise<string> {
     const pdfjsLib = await import('pdfjs-dist');
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-        'pdfjs-dist/build/pdf.worker.min.mjs',
+        'pdfjs-dist/build/pdf.worker.min.js',
         import.meta.url,
     ).toString();
 
@@ -153,7 +153,7 @@ export async function parsePDFFile(file: File) {
     const pdfjsLib = await import('pdfjs-dist');
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-        'pdfjs-dist/build/pdf.worker.min.mjs',
+        'pdfjs-dist/build/pdf.worker.min.js',
         import.meta.url,
     ).toString();
 
