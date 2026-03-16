@@ -14,69 +14,21 @@ export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string
 
         const { PdfReader } = await import('pdfreader');
 
-        return new Promise((resolve) => {
-            const reader = new PdfReader();
+        const pages: { [key: number]: string } = {};
+        let pageCount = 0;
 
-            let fullText = '';
-            let pageCount = 0;
-            const pages: { [key: number]: string } = {};
+        await new Promise<void>((resolve, reject) => {
+            const reader = new PdfReader();
 
             reader.parseBuffer(Buffer.from(fileBuffer), (err, item) => {
                 if (err) {
                     console.error('PDF parsing error:', err);
-                    resolve({
-                        success: false,
-                        error: `Failed to parse PDF: ${err.message}`
-                    });
-                    return;
+                    return reject(err);
                 }
 
                 if (!item) {
                     // End of parsing
-                    console.log(`PDF processing complete: ${Object.keys(pages).length} pages processed`);
-
-                    // Combine all pages and create segments with page numbers
-                    const segments: TextSegment[] = [];
-                    let segmentIndex = 0;
-
-                    Object.keys(pages).sort((a, b) => parseInt(a) - parseInt(b)).forEach(pageNumStr => {
-                        const pageNum = parseInt(pageNumStr);
-                        const pageText = pages[pageNum].trim();
-
-                        if (pageText) {
-                            // Split page text into segments
-                            const words = pageText.split(/\s+/).filter((word) => word.length > 0);
-                            let startIndex = 0;
-
-                            while (startIndex < words.length) {
-                                const endIndex = Math.min(startIndex + 500, words.length); // 500 words per segment
-                                const segmentWords = words.slice(startIndex, endIndex);
-                                const segmentText = segmentWords.join(' ');
-
-                                segments.push({
-                                    text: segmentText,
-                                    segmentIndex,
-                                    pageNumber: pageNum,
-                                    wordCount: segmentWords.length,
-                                });
-
-                                segmentIndex++;
-                                startIndex = endIndex > startIndex + 450 ? endIndex - 50 : endIndex; // 50 word overlap
-                            }
-                        }
-                    });
-
-                    console.log(`Created ${segments.length} segments from ${Object.keys(pages).length} pages`);
-
-                    resolve({
-                        success: true,
-                        data: {
-                            content: segments,
-                            totalPages: Object.keys(pages).length,
-                            totalSegments: segments.length
-                        }
-                    });
-                    return;
+                    return resolve();
                 }
 
                 if (item.page) {
@@ -85,13 +37,51 @@ export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string
 
                 if (item.text) {
                     const pageNum = item.page || 1;
-                    if (!pages[pageNum]) {
-                        pages[pageNum] = '';
-                    }
-                    pages[pageNum] += item.text + ' ';
+                    pages[pageNum] = (pages[pageNum] || '') + item.text + ' ';
                 }
             });
         });
+
+        // Combine all pages and create segments with page numbers
+        const segments: TextSegment[] = [];
+        let segmentIndex = 0;
+
+        Object.keys(pages)
+            .map(Number)
+            .sort((a, b) => a - b)
+            .forEach((pageNum) => {
+                const pageText = (pages[pageNum] || '').trim();
+                if (!pageText) return;
+
+                const words = pageText.split(/\s+/).filter((word) => word.length > 0);
+                let startIndex = 0;
+
+                while (startIndex < words.length) {
+                    const endIndex = Math.min(startIndex + 500, words.length); // 500 words per segment
+                    const segmentWords = words.slice(startIndex, endIndex);
+
+                    segments.push({
+                        text: segmentWords.join(' '),
+                        segmentIndex,
+                        pageNumber: pageNum,
+                        wordCount: segmentWords.length,
+                    });
+
+                    segmentIndex++;
+                    startIndex = endIndex > startIndex + 450 ? endIndex - 50 : endIndex; // 50 word overlap
+                }
+            });
+
+        console.log(`Created ${segments.length} segments from ${Object.keys(pages).length} pages`);
+
+        return {
+            success: true,
+            data: {
+                content: segments,
+                totalPages: Object.keys(pages).length,
+                totalSegments: segments.length,
+            },
+        };
     } catch (error) {
         console.error('Error processing PDF on server:', error);
         return {
