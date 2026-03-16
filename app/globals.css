@@ -208,7 +208,7 @@
     @apply relative z-20 flex flex-col justify-center items-center p-7;
   }
   .form-btn {
-    @apply !w-full h-14 rounded-lg bg-[#3b82f6] cursor-pointer hover:bg-[#2563eb] text-xl text-white font-bold transition-all duration-200 shadow-soft hover:shadow-soft-md;
+    @apply !w-full h-14 rounded-lg bg-[#3b82f6] cursor-pointer hover:bg-[#2563eb] text-xl text-white font-bold transition-all duration-200 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-md)];
     font-family: 'IBM Plex Serif', serif;
   }
   .loading-wrapper {
@@ -254,7 +254,7 @@
 
   /* Button utilities */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold rounded-lg transition-all duration-200 shadow-soft hover:shadow-soft-md;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold rounded-lg transition-all duration-200 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-md)];
     font-family: 'IBM Plex Serif', serif;
   }
   .btn-secondary {
@@ -447,10 +447,10 @@
     font-family: 'IBM Plex Serif', serif;
   }
   .vapi-stat-box {
-    @apply bg-white rounded-xl px-4 py-6 min-w-[225px] text-center border border-slate-200 shadow-soft;
+    @apply bg-white rounded-xl px-4 py-6 min-w-[225px] text-center border border-slate-200 shadow-[var(--shadow-soft)];
   }
   .vapi-stat-box-sm {
-    @apply bg-white rounded-xl px-4 py-6 min-w-[225px] text-center border border-slate-200 shadow-soft;
+    @apply bg-white rounded-xl px-4 py-6 min-w-[225px] text-center border border-slate-200 shadow-[var(--shadow-soft)];
   }
   .vapi-stat-label {
     @apply text-lg font-medium text-[#475569] mb-3;
@@ -489,15 +489,15 @@
     @apply hidden lg:flex items-center justify-center flex-1 max-w-[400px];
   }
   .library-cta-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-white text-[#3b82f6] px-6 py-3 rounded-lg font-bold text-base md:text-lg transition-all duration-200 w-full lg:w-fit shadow-soft hover:shadow-soft-md hover:bg-slate-50;
+    @apply inline-flex items-center justify-center gap-2 bg-white text-[#3b82f6] px-6 py-3 rounded-lg font-bold text-base md:text-lg transition-all duration-200 w-full lg:w-fit shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-md)] hover:bg-slate-50;
     font-family: 'IBM Plex Serif', serif;
   }
   .library-cta-secondary {
-    @apply inline-flex items-center gap-2 bg-white text-[#0f172a] px-6 py-3 rounded-lg font-bold text-lg transition-all duration-200 shadow-soft hover:shadow-soft-md;
+    @apply inline-flex items-center gap-2 bg-white text-[#0f172a] px-6 py-3 rounded-lg font-bold text-lg transition-all duration-200 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-md)];
     font-family: 'IBM Plex Serif', serif;
   }
   .library-steps-card {
-    @apply bg-white p-5 rounded-xl border border-slate-200 shadow-soft;
+    @apply bg-white p-5 rounded-xl border border-slate-200 shadow-[var(--shadow-soft)];
     list-style: none;
   }
   .library-steps-card div {
@@ -517,7 +517,7 @@
     @apply font-normal text-sm text-[#475569] leading-5;
   }
   .library-search-wrapper {
-    @apply flex items-center bg-white border border-slate-200 rounded-lg overflow-hidden w-full sm:w-80 shadow-soft;
+    @apply flex items-center bg-white border border-slate-200 rounded-lg overflow-hidden w-full sm:w-80 shadow-[var(--shadow-soft)];
   }
   .library-search-input {
     @apply flex-1 py-2 px-4 outline-none text-[#0f172a] placeholder:text-[#cbd5e1];
@@ -533,7 +533,7 @@
      TRANSCRIPT COMPONENT
      =========================================== */
   .transcript-container {
-    @apply w-full bg-white rounded-xl h-full min-h-0 flex flex-col border border-slate-200 shadow-soft;
+    @apply w-full bg-white rounded-xl h-full min-h-0 flex flex-col border border-slate-200 shadow-[var(--shadow-soft)];
   }
   .transcript-messages {
     @apply flex flex-col gap-4 sm:gap-6 p-4 sm:p-6 flex-1 overflow-y-auto scroll-smooth;
@@ -633,7 +633,7 @@
     @apply absolute -left-1 top-2 bottom-2 w-3 bg-gradient-to-r from-[#3b82f6] to-[#60a5fa] rounded-l-md z-0;
   }
   .book-card-cover-wrapper {
-    @apply relative bg-white rounded-xl overflow-hidden flex items-center justify-center h-[205px] md:h-[240px] border border-slate-200 shadow-soft hover:shadow-soft-md transition-shadow;
+    @apply relative bg-white rounded-xl overflow-hidden flex items-center justify-center h-[205px] md:h-[240px] border border-slate-200 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-md)] transition-shadow;
   }
   .book-card-cover {
     @apply w-auto h-[170px] md:h-[200px] object-cover rounded-lg;
