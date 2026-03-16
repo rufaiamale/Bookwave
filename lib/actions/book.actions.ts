@@ -12,33 +12,86 @@ export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string
     try {
         console.log('Processing PDF on server...');
 
-        const pdfParse = (await import('pdf-parse')).default;
+        const { PdfReader } = await import('pdfreader');
 
-        // Convert ArrayBuffer to Buffer for pdf-parse
-        const buffer = Buffer.from(fileBuffer);
+        return new Promise((resolve) => {
+            const reader = new PdfReader();
 
-        const data = await pdfParse(buffer);
+            let fullText = '';
+            let pageCount = 0;
+            const pages: { [key: number]: string } = {};
 
-        console.log(`PDF loaded with ${data.numpages} pages`);
+            reader.parseBuffer(Buffer.from(fileBuffer), (err, item) => {
+                if (err) {
+                    console.error('PDF parsing error:', err);
+                    resolve({
+                        success: false,
+                        error: `Failed to parse PDF: ${err.message}`
+                    });
+                    return;
+                }
 
-        // Get the full text content
-        const fullText = data.text;
+                if (!item) {
+                    // End of parsing
+                    console.log(`PDF processing complete: ${Object.keys(pages).length} pages processed`);
 
-        console.log(`Extracted ${fullText.length} characters of text`);
+                    // Combine all pages and create segments with page numbers
+                    const segments: TextSegment[] = [];
+                    let segmentIndex = 0;
 
-        // Split text into segments for search
-        const segments = splitIntoSegments(fullText);
+                    Object.keys(pages).sort((a, b) => parseInt(a) - parseInt(b)).forEach(pageNumStr => {
+                        const pageNum = parseInt(pageNumStr);
+                        const pageText = pages[pageNum].trim();
 
-        console.log(`PDF processing complete: ${segments.length} segments created`);
+                        if (pageText) {
+                            // Split page text into segments
+                            const words = pageText.split(/\s+/).filter((word) => word.length > 0);
+                            let startIndex = 0;
 
-        return {
-            success: true,
-            data: {
-                content: segments,
-                totalPages: data.numpages,
-                totalSegments: segments.length
-            }
-        };
+                            while (startIndex < words.length) {
+                                const endIndex = Math.min(startIndex + 500, words.length); // 500 words per segment
+                                const segmentWords = words.slice(startIndex, endIndex);
+                                const segmentText = segmentWords.join(' ');
+
+                                segments.push({
+                                    text: segmentText,
+                                    segmentIndex,
+                                    pageNumber: pageNum,
+                                    wordCount: segmentWords.length,
+                                });
+
+                                segmentIndex++;
+                                startIndex = endIndex > startIndex + 450 ? endIndex - 50 : endIndex; // 50 word overlap
+                            }
+                        }
+                    });
+
+                    console.log(`Created ${segments.length} segments from ${Object.keys(pages).length} pages`);
+
+                    resolve({
+                        success: true,
+                        data: {
+                            content: segments,
+                            totalPages: Object.keys(pages).length,
+                            totalSegments: segments.length
+                        }
+                    });
+                    return;
+                }
+
+                if (item.page) {
+                    pageCount = Math.max(pageCount, item.page);
+                }
+
+                if (item.text) {
+                    const pageNum = item.page || 1;
+                    if (!pages[pageNum]) {
+                        pages[pageNum] = '';
+                    }
+                    pages[pageNum] += item.text + ' ';
+                }
+            });
+        });
     } catch (error) {
         console.error('Error processing PDF on server:', error);
         return {
