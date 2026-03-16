@@ -2,11 +2,68 @@
 
 import {CreateBook, TextSegment} from "@/types";
 import {connectToDatabase} from "@/database/mongoose";
-import {escapeRegex, generateSlug, serializeData} from "@/lib/utils";
+import {escapeRegex, generateSlug, serializeData, splitIntoSegments} from "@/lib/utils";
 import Book from "@/database/models/book.model";
 import BookSegment from "@/database/models/book-segment.model";
 import mongoose from "mongoose";
 import {getUserPlan} from "@/lib/subscription.server";
+
+export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string) => {
+    try {
+        console.log('Processing PDF on server...');
+
+        const pdfjsLib = await import('pdfjs-dist');
+
+        // Set worker source for server-side
+        pdfjsLib.GlobalWorkerOptions.workerSrc = './node_modules/pdfjs-dist/build/pdf.worker.min.mjs';
+
+        // Load PDF document
+        const loadingTask = pdfjsLib.getDocument({ data: fileBuffer });
+        const pdfDocument = await loadingTask.promise;
+
+        console.log(`PDF loaded with ${pdfDocument.numPages} pages`);
+
+        // Extract text from all pages
+        let fullText = '';
+
+        for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
+            const page = await pdfDocument.getPage(pageNum);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items
+                .filter((item) => 'str' in item)
+                .map((item) => (item as { str: string }).str)
+                .join(' ');
+            fullText += pageText + '\n';
+
+            if (pageNum % 10 === 0) {
+                console.log(`Processed ${pageNum}/${pdfDocument.numPages} pages`);
+            }
+        }
+
+        // Split text into segments for search
+        const segments = splitIntoSegments(fullText);
+
+        console.log(`PDF processing complete: ${segments.length} segments created`);
+
+        // Clean up PDF document resources
+        await pdfDocument.destroy();
+
+        return {
+            success: true,
+            data: {
+                content: segments,
+                totalPages: pdfDocument.numPages,
+                totalSegments: segments.length
+            }
+        };
+    } catch (error) {
+        console.error('Error processing PDF on server:', error);
+        return {
+            success: false,
+            error: `Failed to process PDF: ${error instanceof Error ? error.message : String(error)}`
+        };
+    }
+};
 
 export const getAllBooks = async (search?: string) => {
     try {
