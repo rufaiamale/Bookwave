@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   description: "Transform your books into interactive AI conversations. Upload PDFs, and chat with your books using voice.",
 };
 
+import AuthGuard from "@/components/AuthGuard";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +39,7 @@ export default function RootLayout({
             className={`${ibmPlexSerif.variable} ${monaSans.variable} relative font-sans antialiased`}
           >
             <Navbar />
-            {children}
+            <AuthGuard>{children}</AuthGuard>
             <Toaster />
           </body>
         </html>
