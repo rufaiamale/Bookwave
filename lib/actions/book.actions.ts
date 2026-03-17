@@ -2,94 +2,11 @@
 
 import {CreateBook, TextSegment} from "@/types";
 import {connectToDatabase} from "@/database/mongoose";
-import {escapeRegex, generateSlug, serializeData, splitIntoSegments} from "@/lib/utils";
+import {escapeRegex, generateSlug, serializeData} from "@/lib/utils";
 import Book from "@/database/models/book.model";
 import BookSegment from "@/database/models/book-segment.model";
 import mongoose from "mongoose";
 import {getUserPlan} from "@/lib/subscription.server";
-
-export const processPDFServer = async (fileBuffer: ArrayBuffer, fileName: string) => {
-    try {
-        console.log('Processing PDF on server...');
-
-        const { PdfReader } = await import('pdfreader');
-
-        const pages: { [key: number]: string } = {};
-        let pageCount = 0;
-
-        await new Promise<void>((resolve, reject) => {
-            const reader = new PdfReader();
-
-            reader.parseBuffer(Buffer.from(fileBuffer), (err, item) => {
-                if (err) {
-                    console.error('PDF parsing error:', err);
-                    return reject(err);
-                }
-
-                if (!item) {
-                    // End of parsing
-                    return resolve();
-                }
-
-                if (item.page) {
-                    pageCount = Math.max(pageCount, item.page);
-                }
-
-                if (item.text) {
-                    const pageNum = item.page || 1;
-                    pages[pageNum] = (pages[pageNum] || '') + item.text + ' ';
-                }
-            });
-        });
-
-        // Combine all pages and create segments with page numbers
-        const segments: TextSegment[] = [];
-        let segmentIndex = 0;
-
-        Object.keys(pages)
-            .map(Number)
-            .sort((a, b) => a - b)
-            .forEach((pageNum) => {
-                const pageText = (pages[pageNum] || '').trim();
-                if (!pageText) return;
-
-                const words = pageText.split(/\s+/).filter((word) => word.length > 0);
-                let startIndex = 0;
-
-                while (startIndex < words.length) {
-                    const endIndex = Math.min(startIndex + 500, words.length); // 500 words per segment
-                    const segmentWords = words.slice(startIndex, endIndex);
-
-                    segments.push({
-                        text: segmentWords.join(' '),
-                        segmentIndex,
-                        pageNumber: pageNum,
-                        wordCount: segmentWords.length,
-                    });
-
-                    segmentIndex++;
-                    startIndex = endIndex > startIndex + 450 ? endIndex - 50 : endIndex; // 50 word overlap
-                }
-            });
-
-        console.log(`Created ${segments.length} segments from ${Object.keys(pages).length} pages`);
-
-        return {
-            success: true,
-            data: {
-                content: segments,
-                totalPages: Object.keys(pages).length,
-                totalSegments: segments.length,
-            },
-        };
-    } catch (error) {
-        console.error('Error processing PDF on server:', error);
-        return {
-            success: false,
-            error: `Failed to process PDF: ${error instanceof Error ? error.message : String(error)}`
-        };
-    }
-};
 
 export const getAllBooks = async (search?: string) => {
     try {

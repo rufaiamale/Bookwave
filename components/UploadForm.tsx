@@ -15,9 +15,9 @@ import VoiceSelector from './VoiceSelector';
 import LoadingOverlay from './LoadingOverlay';
 import {useAuth, useUser} from "@clerk/nextjs";
 import { toast } from 'sonner';
-import {checkBookExists, createBook, saveBookSegments, processPDFServer} from "@/lib/actions/book.actions";
+import {checkBookExists, createBook, saveBookSegments} from "@/lib/actions/book.actions";
 import {useRouter} from "next/navigation";
-import {generateCoverImage} from "@/lib/utils";
+import {parsePDFFile} from "@/lib/utils";
 import {upload} from "@vercel/blob/client";
 
 const UploadForm = () => {
@@ -63,30 +63,7 @@ const UploadForm = () => {
             const fileTitle = data.title.replace(/\s+/g, '-').toLowerCase();
             const pdfFile = data.pdfFile;
 
-            // Process PDF on server instead of client
-            const pdfFormData = new FormData();
-            pdfFormData.append('pdf', pdfFile);
-
-            const pdfResponse = await fetch('/api/process-pdf', {
-                method: 'POST',
-                body: pdfFormData,
-            });
-
-            if (!pdfResponse.ok) {
-                const errorData = await pdfResponse.json();
-                toast.error(errorData.error || "Failed to process PDF");
-                return;
-            }
-
-            const pdfResult = await pdfResponse.json();
-
-            // Generate cover image client-side
-            const coverDataURL = await generateCoverImage(pdfFile);
-
-            const parsedPDF = {
-                content: pdfResult.content,
-                cover: coverDataURL,
-            };
+            const parsedPDF = await parsePDFFile(pdfFile);
 
             if(parsedPDF.content.length === 0) {
                 toast.error("Failed to parse PDF. Please try again with a different file.");

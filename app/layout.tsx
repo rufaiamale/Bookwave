@@ -4,7 +4,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import Navbar from "@/components/Navbar";
 import "./globals.css";
-import "./clerk.css";
 import {Toaster} from "@/components/ui/sonner";
 
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -21,11 +20,9 @@ const monaSans = Mona_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Bookwave",
+  title: "Bookified",
   description: "Transform your books into interactive AI conversations. Upload PDFs, and chat with your books using voice.",
 };
-
-import AuthGuard from "@/components/AuthGuard";
 
 export default function RootLayout({
   children,
@@ -39,7 +36,7 @@ export default function RootLayout({
             className={`${ibmPlexSerif.variable} ${monaSans.variable} relative font-sans antialiased`}
           >
             <Navbar />
-            <AuthGuard>{children}</AuthGuard>
+            {children}
             <Toaster />
           </body>
         </html>
