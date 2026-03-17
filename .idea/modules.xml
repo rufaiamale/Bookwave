@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/bookified.iml" filepath="$PROJECT_DIR$/.idea/bookified.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/bookwave.iml" filepath="$PROJECT_DIR$/.idea/bookwave.iml" />
     </modules>
   </component>
 </project>
