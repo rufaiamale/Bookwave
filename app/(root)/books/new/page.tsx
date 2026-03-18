@@ -2,13 +2,15 @@ import UploadForm from "@/components/UploadForm";
 
 const Page = () => {
     return (
-        <main className="new-book">
-            <section className="flex flex-col gap-5 text-center">
-                <h1 className="page-title-xl">Add a New Book</h1>
-                <p className="subtitle">Upload a PDF to generate your  interactive reading experience</p>
-            </section>
+        <main className="min-h-screen bg-gray-50">
+            <section className="wrapper py-16">
+                <div className="max-w-2xl mx-auto text-center mb-12">
+                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Add a New Book</h1>
+                    <p className="text-lg text-gray-600">Upload a PDF to create your interactive reading experience with AI-powered voice conversations</p>
+                </div>
 
-            <UploadForm />
+                <UploadForm />
+            </section>
         </main>
     )
 }

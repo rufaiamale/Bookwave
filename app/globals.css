@@ -204,17 +204,16 @@
     @apply !mt-3 text-center text-lg;
   }
   .new-book {
-    @apply max-w-7xl px-5 mx-auto w-full space-y-6 py-18 min-h-screen;
+    @apply max-w-7xl px-5 mx-auto w-full space-y-8 py-20 min-h-screen bg-gray-50;
   }
   .new-book-wrapper {
-    @apply mx-auto max-w-2xl space-y-6 mt-12 mb-20;
+    @apply mx-auto max-w-2xl space-y-8 mt-12 mb-20 bg-white rounded-xl p-8 border border-gray-200;
   }
   .file-upload-shadow {
     @apply relative z-20 flex flex-col justify-center items-center p-7;
   }
   .form-btn {
-    @apply !w-full h-14 rounded-[10px] bg-[#663820] cursor-pointer hover:bg-[#7a4528] text-xl text-white font-bold transition-colors;
-    font-family: 'IBM Plex Serif', serif;
+    @apply !w-full h-12 rounded-lg bg-blue-600 cursor-pointer hover:bg-blue-700 text-base text-white font-semibold transition-colors;
   }
   .loading-wrapper {
     @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm;
@@ -621,22 +620,23 @@
     @apply flex gap-4;
   }
   .voice-selector-option {
-    @apply flex-1 flex items-center justify-center gap-3 p-4 border border-[var(--border-subtle)] rounded-lg cursor-pointer transition-all;
+    @apply flex-1 flex items-center justify-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer transition-all;
     box-shadow: var(--shadow-soft-sm);
 
     &:hover {
       box-shadow: var(--shadow-soft);
       transform: translateY(-2px);
+      @apply border-blue-300;
     }
   }
   .voice-selector-option-selected {
-    @apply bg-[var(--accent-light)] border-[var(--accent-warm)];
+    @apply bg-blue-50 border-blue-400;
   }
   .voice-selector-option-default {
     @apply bg-white;
 
     &:hover {
-      @apply bg-[var(--bg-secondary)];
+      @apply bg-gray-50;
     }
   }
   .voice-selector-option-disabled {
@@ -684,30 +684,30 @@
      UPLOAD FORM COMPONENT
      =========================================== */
   .upload-dropzone {
-    @apply flex flex-col items-center justify-center h-[165px] bg-white rounded-[6px] cursor-pointer transition-all;
+    @apply flex flex-col items-center justify-center h-[200px] bg-gray-50 rounded-lg cursor-pointer transition-all border-2 border-dashed border-gray-300;
 
     &:hover {
-      @apply bg-gray-50;
+      @apply bg-blue-50 border-blue-400;
     }
   }
   .upload-dropzone-uploaded {
-    @apply bg-[#f3e4c7];
+    @apply bg-blue-50 border-blue-400;
 
     .upload-dropzone-text {
-      @apply text-[#663820];
+      @apply text-blue-900;
     }
     .upload-dropzone-hint {
-      @apply text-[#8B7355];
+      @apply text-blue-700;
     }
   }
   .upload-dropzone-icon {
-    @apply w-[48px] h-[48px] mb-2 text-[#8B7355];
+    @apply w-12 h-12 mb-3 text-blue-600;
   }
   .upload-dropzone-text {
-    @apply text-[#777] text-lg font-medium text-center;
+    @apply text-gray-900 text-base font-semibold text-center;
   }
   .upload-dropzone-hint {
-    @apply text-[#777] text-sm mt-1;
+    @apply text-gray-600 text-sm mt-2;
   }
   .upload-dropzone-remove {
     @apply flex items-center justify-center w-6 h-6 text-red-500 transition-colors cursor-pointer;
@@ -717,10 +717,10 @@
     }
   }
   .form-label {
-    @apply text-lg font-medium text-black mb-2 block;
+    @apply text-sm font-semibold text-gray-900 mb-3 block;
   }
   .form-input {
-    @apply w-full p-4 bg-white rounded-lg text-lg font-medium text-[#222] placeholder:text-[#999];
+    @apply w-full px-4 py-3 bg-white rounded-lg text-base font-medium text-gray-900 placeholder:text-gray-500 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
   }
 
   /* ===========================================
@@ -741,13 +741,14 @@
 .cl-formButtonPrimary {
   border: none !important;
   box-shadow: var(--shadow-soft) !important;
-  border-radius: 0.75rem !important;
-  background-color: #212a3b !important;
+  border-radius: 0.5rem !important;
+  background-color: #3b82f6 !important;
   color: white !important;
+  font-weight: 600 !important;
 }
 
 .cl-formButtonPrimary:hover {
-  background-color: #3d485e !important;
+  background-color: #2563eb !important;
   box-shadow: var(--shadow-soft-md) !important;
 }
 
@@ -775,15 +776,15 @@
 .cl-formFieldInput {
   position: relative !important;
   z-index: 10 !important;
-  border: 1px solid var(--border-subtle) !important;
+  border: 1px solid #e5e7eb !important;
   background-color: white !important;
   box-shadow: var(--shadow-soft-sm) !important;
-  border-radius: 0.75rem !important;
+  border-radius: 0.5rem !important;
 }
 
 .cl-formFieldInput:focus {
-  border-color: #212a3b !important;
-  box-shadow: var(--shadow-soft), 0 0 0 2px rgba(33, 42, 59, 0.1) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: var(--shadow-soft), 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
 }
 
 /* Clerk Auth Social Buttons with Soft Shadow */
@@ -791,19 +792,20 @@
 .cl-socialButtonsBlockButton__google,
 .cl-socialButtonsBlockButton__facebook {
   box-shadow: var(--shadow-soft-sm) !important;
-  border-radius: 0.75rem !important;
-  border: 1px solid var(--border-subtle) !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #e5e7eb !important;
 }
 
 .cl-socialButtonsBlockButton:hover {
   box-shadow: var(--shadow-soft) !important;
-  background-color: var(--bg-secondary) !important;
+  background-color: #f9fafb !important;
 }
 
 /* Pricing cards container */
 .clerk-pricing-table-wrapper {
-  padding: 0.5rem;
-  background: var(--bg-primary);
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 1rem;
 }
 
 /* Center all wrappers */
@@ -827,8 +829,8 @@
 .clerk-pricing-table-wrapper > div > div > div {
   position: relative;
   z-index: 1;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: 1rem !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
   background-color: white !important;
   box-shadow: var(--shadow-soft-md) !important;
 }
@@ -881,7 +883,7 @@ button[data-variant='unstyled'] *,
 .cl-tabButton *,
 [role='tablist'] button,
 [role='tablist'] button * {
-  color: #212a3b !important;
+  color: #1f2937 !important;
 }
 
 /* Card sections have white background */
@@ -892,10 +894,10 @@ button[data-variant='unstyled'] *,
 
 /* All buttons */
 .clerk-pricing-table-wrapper button {
-  height: 3rem !important;
-  min-height: 3rem !important;
-  font-size: 1.125rem !important;
-  background-color: #212a3b !important;
+  height: 2.75rem !important;
+  min-height: 2.75rem !important;
+  font-size: 1rem !important;
+  background-color: #3b82f6 !important;
   color: white !important;
   font-weight: 500 !important;
   border: none !important;

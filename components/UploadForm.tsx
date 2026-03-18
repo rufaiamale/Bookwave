@@ -241,7 +241,7 @@ const UploadForm = () => {
 
                         {/* 6. Submit Button */}
                         <Button type="submit" className="form-btn" disabled={isSubmitting}>
-                            Begin Synthesis
+                            {isSubmitting ? 'Uploading...' : 'Upload & Analyze'}
                         </Button>
                     </form>
                 </Form>
