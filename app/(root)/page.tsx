@@ -11,18 +11,20 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
     const books = bookResults.success ? bookResults.data ?? [] : []
 
     return (
-        <main className="wrapper container">
+        <main className="min-h-screen bg-gray-50">
             <HeroSection />
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-10">
-                <h2 className="text-3xl font-serif font-bold text-[#212a3b]">Recent Books</h2>
-                <Search />
-            </div>
+            <div className="wrapper py-16">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
+                    <h2 className="text-3xl font-bold text-gray-900">Your Library</h2>
+                    <Search />
+                </div>
 
-            <div className="library-books-grid">
-                {books.map((book) => (
-                    <BookCard key={book._id} title={book.title} author={book.author} coverURL={book.coverURL} slug={book.slug} />
-                ))}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+                    {books.map((book) => (
+                        <BookCard key={book._id} title={book.title} author={book.author} coverURL={book.coverURL} slug={book.slug} />
+                    ))}
+                </div>
             </div>
         </main>
     )

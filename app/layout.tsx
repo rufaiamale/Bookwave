@@ -33,7 +33,7 @@ export default function RootLayout({
     <ClerkProvider>
         <html lang="en">
           <body
-            className={`${ibmPlexSerif.variable} ${monaSans.variable} relative font-sans antialiased`}
+            className={`${ibmPlexSerif.variable} ${monaSans.variable} relative font-sans antialiased bg-white`}
           >
             <Navbar />
             {children}
